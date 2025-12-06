@@ -1,7 +1,7 @@
 import java.io.File
 import kotlin.math.sqrt
 
-
+const val EPSILON = 0.0001
 fun main() {
     val file = File("./sampleMatricies/simpleRing.txt")
     val graph = readUnweightedGraph(file.bufferedReader())
@@ -21,7 +21,7 @@ fun main() {
     choleskyMatrix.print()
     matrix.print()
     recreatedMatrix.print()
-    println(matrix.equals(recreatedMatrix, 0.0001))
+    println(matrix.equals(recreatedMatrix, EPSILON))
 }
 
 fun choleskyFactorization(matrix: SquareMatrix): SquareMatrix {
