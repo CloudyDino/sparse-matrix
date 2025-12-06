@@ -1,18 +1,17 @@
 // TODO: make graph have directed edges
-// TODO: make graph edges have weights
 /**
  * Graph is a directed graph with vertices and edges
  * vertices are 0-indexed
  *
  * @param vertices number of vertices
- * @param edges map of edges where key is from and value is a list of to vertices
+ * @param edges map from-vertex -> (to-vertex -> weight of edge)
  */
-data class UnweightedGraph(
+data class Graph(
     val vertices: Int,
-    val edges: Map<Int, Set<Int>>
+    val edges: Map<Int, Map<Int, Double>>
 )
 
-fun UnweightedGraph.isStronglyConnected(): Boolean {
+fun Graph.isStronglyConnected(): Boolean {
     val reached = mutableSetOf<Int>()
     val stack = ArrayDeque<Int>().apply { add(0) }
 
@@ -22,7 +21,7 @@ fun UnweightedGraph.isStronglyConnected(): Boolean {
             continue
         }
 
-        for (toVertex in edges[vertex] ?: emptyList()) {
+        for (toVertex in edges.getOrDefault(vertex, emptyMap()).keys) {
             stack.add(toVertex)
         }
     }

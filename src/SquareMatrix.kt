@@ -1,5 +1,3 @@
-import kotlin.math.abs
-
 @JvmInline
 value class SquareMatrix(val data: Array<DoubleArray>) {
     init {
@@ -8,64 +6,25 @@ value class SquareMatrix(val data: Array<DoubleArray>) {
 }
 
 fun SquareMatrix.transpose(): SquareMatrix {
-    val transposed = Array(data.size) { DoubleArray(data.size) }
-    for (i in data.indices) {
-        for (j in data.indices) {
-            transposed[i][j] = data[j][i]
-        }
-    }
-    return SquareMatrix(transposed)
+    return SquareMatrix(this.data.transposed())
 }
 
 fun SquareMatrix.multiply(other: SquareMatrix): SquareMatrix {
-    val product = Array(data.size) { DoubleArray(data.size) }
-    for (i in data.indices) {
-        for (j in data.indices) {
-            for (k in data.indices) {
-                product[i][j] += data[i][k] * other.data[k][j]
-            }
-        }
-    }
-    return SquareMatrix(product)
+    return SquareMatrix(this.data.multiply(other.data))
 }
 
 fun SquareMatrix.add(other: SquareMatrix): SquareMatrix {
-    val sum = Array(data.size) { DoubleArray(data.size) }
-    for (i in data.indices) {
-        for (j in data.indices) {
-            sum[i][j] = data[i][j] + other.data[i][j]
-        }
-    }
-    return SquareMatrix(sum)
+    return SquareMatrix(this.data.add(other.data))
 }
 
 fun SquareMatrix.subtract(other: SquareMatrix): SquareMatrix {
-    val difference = Array(data.size) { DoubleArray(data.size) }
-    for (i in data.indices) {
-        for (j in data.indices) {
-            difference[i][j] = data[i][j] - other.data[i][j]
-        }
-    }
-    return SquareMatrix(difference)
+    return SquareMatrix(this.data.subtract(other.data))
 }
 
 fun SquareMatrix.equals(other: SquareMatrix, epsilon: Double): Boolean {
-    for (i in data.indices) {
-        for (j in data.indices) {
-            if (abs(data[i][j] - other.data[i][j]) > epsilon) {
-                return false
-            }
-        }
-    }
-    return true
+    return this.data.equals(other.data, epsilon)
 }
 
 fun SquareMatrix.print() {
-    for (i in data.indices) {
-        for (j in data.indices) {
-            print(String.format(" %.2f", data[i][j]).padStart(6))
-        }
-        println()
-    }
-    println()
+    this.data.print()
 }

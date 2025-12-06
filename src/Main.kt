@@ -1,4 +1,3 @@
-import java.io.BufferedReader
 import java.io.File
 import kotlin.math.sqrt
 
@@ -14,7 +13,7 @@ fun main() {
         )
         return
     }
-    val matrix = convertToLaplacianMatrix(graph)
+    val matrix = convertToDenseLaplacianMatrix(graph)
     // Note: for undirected graph, we can check if the Laplacian matrix is irreducible
     // by checking if the Laplacian[i][i] != 0 for all i
     val choleskyMatrix = choleskyFactorization(matrix)
@@ -23,43 +22,6 @@ fun main() {
     matrix.print()
     recreatedMatrix.print()
     println(matrix.equals(recreatedMatrix, 0.0001))
-}
-
-/**
- * Reads an unweighted graph from a BufferedReader
- *
- * Expected format:
- * <number of vertices>
- * <vertex 1 of edge 1> <vertex 2 of edge 1>
- * <vertex 1 of edge 2> <vertex 2 of edge 2>
- * ...
- *
- * @param bufferedReader the BufferedReader to read from
- * @return the UnweightedGraph read from the BufferedReader
- */
-fun readUnweightedGraph(bufferedReader: BufferedReader): UnweightedGraph {
-    val vertices = bufferedReader.readLine().toInt()
-    val edges = mutableMapOf<Int, MutableSet<Int>>()
-    bufferedReader.forEachLine { line ->
-        val (vertex1, vertex2) = line.split(" ").map { it.toInt() }
-        edges.getOrPut(vertex1) { mutableSetOf() }.add(vertex2)
-        edges.getOrPut(vertex2) { mutableSetOf() }.add(vertex1)
-    }
-
-    return UnweightedGraph(vertices, edges)
-}
-
-// TODO: Use sparse matrix representation
-fun convertToLaplacianMatrix(graph: UnweightedGraph): SquareMatrix {
-    val matrix = Array(graph.vertices) { DoubleArray(graph.vertices) }
-    for (fromVertex in graph.edges.keys) {
-        for (toVertex in graph.edges[fromVertex] ?: emptyList()) {
-            matrix[fromVertex][toVertex] = -1.0
-        }
-        matrix[fromVertex][fromVertex] = graph.edges[fromVertex]?.size?.toDouble() ?: 0.0
-    }
-    return SquareMatrix(matrix)
-
 }
 
 fun choleskyFactorization(matrix: SquareMatrix): SquareMatrix {
